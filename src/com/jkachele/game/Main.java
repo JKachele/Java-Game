@@ -1,9 +1,10 @@
-package com.jkachele.game.main;
+package com.jkachele.game;
 
 import java.awt.*;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferStrategy;
 
-public class Game extends Canvas implements Runnable {
+public class Main extends Canvas implements Runnable {
 
     public static final int WIDTH = 640;
     public static final int HEIGHT = WIDTH / 12 * 9;
@@ -12,7 +13,11 @@ public class Game extends Canvas implements Runnable {
     private Thread thread;
     private boolean isRunning = false;
 
-    public Game() {
+    private final Handler handler;
+
+    public Main() {
+        handler = new Handler();
+        this.addKeyListener(new KeyInput(handler));
         new Window(WIDTH, HEIGHT, TITLE, this);
     }
 
@@ -65,6 +70,7 @@ public class Game extends Canvas implements Runnable {
 
     private void tick() {
         //updates the game state
+        handler.tick();
     }
 
     private void render() {
@@ -80,11 +86,13 @@ public class Game extends Canvas implements Runnable {
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, WIDTH, HEIGHT);
 
+        handler.render(g);
+
         g.dispose();
         bs.show();
     }
 
     public static void main(String[] args) {
-        new Game();
+        new Main();
     }
 }
